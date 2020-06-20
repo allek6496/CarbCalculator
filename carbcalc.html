@@ -21,6 +21,7 @@
             .smallright {
                 width: 100%;    
                 float: none;
+                margin-top: 20px;
             }
         }
     </style>
@@ -47,81 +48,79 @@
     </div>
 
 
-    <div id="submit">
-        <script>
-            
-            let input1 = document.getElementById('total');
-            let input2 = document.getElementById('fiber');
-            let input3 = document.getElementById('alcohol');
-            
-            let inputs = [input1, input2, input3]
-            
+    <script>
+        
+        let input1 = document.getElementById('total');
+        let input2 = document.getElementById('fiber');
+        let input3 = document.getElementById('alcohol');
+        
+        let inputs = [input1, input2, input3]
+        
+        inputs.forEach(item => {
+            item.oninput = carbcalculate;
+            item.value = "";
+        });
+
+        function clear(item, itemlabel) {
+            item.setCustomValidity("");
+            itemlabel.innerHTML = itemlabel.innerHTML.replace("<br>*Please enter a smaller number*", "");
+            itemlabel.innerHTML = itemlabel.innerHTML.replace("<br>*Please enter a positive number*", "");
+            itemlabel.innerHTML = itemlabel.innerHTML.replace("<br>*Please enter a number*", "");
+            itemlabel.innerHTML = itemlabel.innerHTML.replace("<br>*Total carbs must be greater than or equal to the fiber and alcohol values.*", "");
+        }
+        
+        function carbcalculate(){
+            var showOutput = true;
+
             inputs.forEach(item => {
-                item.oninput = carbcalculate;
-                item.value = "";
-            });
-
-            function clear(item, itemlabel) {
-                item.setCustomValidity("");
-                itemlabel.innerHTML = itemlabel.innerHTML.replace("<br>*Please enter a smaller number*", "");
-                itemlabel.innerHTML = itemlabel.innerHTML.replace("<br>*Please enter a positive number*", "");
-                itemlabel.innerHTML = itemlabel.innerHTML.replace("<br>*Please enter a number*", "");
-                itemlabel.innerHTML = itemlabel.innerHTML.replace("<br>*Total carbs must be greater than or equal to the fiber and alcohol values.*", "");
-            }
-            
-            function carbcalculate(){
-                var showOutput = true;
-
-                inputs.forEach(item => {
-                    var itemlabel = document.getElementById(item.id + "-label");
-                    if (isNaN(item.value)) {
-                        clear(item, itemlabel);
-                        item.setCustomValidity(" ");
-                        itemlabel.innerHTML = itemlabel.innerHTML + "<br>*Please enter a number*";
-                        output.innerHTML = "&nbsp;";
-                    } else if (item.value < 0){
-                        clear(item, itemlabel);
-                        item.setCustomValidity(" ");
-                        itemlabel.innerHTML = itemlabel.innerHTML + "<br>*Please enter a positive number*";
-                        output.innerHTML = "&nbsp;";
-                    } else if (item.value > 1000000000000) {
-                        clear(item, itemlabel);
-                        item.setCustomValidity(" ");
-                        itemlabel.innerHTML = itemlabel.innerHTML + "<br>*Please enter a smaller number*";
-                        output.innerHTML = "&nbsp;";
-                    } else {
-                        clear(item, itemlabel);
-                    }
-
-                    if (!item.checkValidity()){
-                        showOutput = false;
-                    }
-                });
-                
-                var val = input1.value
-                        - input2.value
-                        - input3.value;
-
-                if (showOutput) {
-                    if (val > 0 || (val == 0 && input1.value > 0)) {
-                        clear(input1, document.getElementById('total-label'));
-                        document.getElementById('output').innerHTML = "One serving has " + String(val) + "g of net carbs!";
-                        document.getElementById("display").style="margin-top: 75px";
-                    } else if (val < 0) {
-                        input1.setCustomValidity(" ")
-                        document.getElementById('total-label').innerHTML = "Total Carbs Per Serving (in grams)<br>*Total carbs must be greater than or equal to the fiber and alcohol values.*"
-                        document.getElementById('output').innerHTML = "&nbsp;";
-                        document.getElementById("display").style="margin-top: 43px";
-                    } else if (val == 0 && input1.value == 0) {
-                        clear(input1, document.getElementById('total-label'));
-                        document.getElementById('output').innerHTML = "&nbsp;";
-                        document.getElementById("display").style="margin-top: 75px";
-                    }
+                var itemlabel = document.getElementById(item.id + "-label");
+                if (isNaN(item.value)) {
+                    clear(item, itemlabel);
+                    item.setCustomValidity(" ");
+                    itemlabel.innerHTML = itemlabel.innerHTML + "<br>*Please enter a number*";
+                    output.innerHTML = "&nbsp;";
+                } else if (item.value < 0){
+                    clear(item, itemlabel);
+                    item.setCustomValidity(" ");
+                    itemlabel.innerHTML = itemlabel.innerHTML + "<br>*Please enter a positive number*";
+                    output.innerHTML = "&nbsp;";
+                } else if (item.value > 1000000000000) {
+                    clear(item, itemlabel);
+                    item.setCustomValidity(" ");
+                    itemlabel.innerHTML = itemlabel.innerHTML + "<br>*Please enter a smaller number*";
+                    output.innerHTML = "&nbsp;";
+                } else {
+                    clear(item, itemlabel);
                 }
 
+                if (!item.checkValidity()){
+                    showOutput = false;
+                }
+            });
+            
+            var val = input1.value
+                    - input2.value
+                    - input3.value;
+
+            if (showOutput) {
+                if (val > 0 || (val == 0 && input1.value > 0)) {
+                    clear(input1, document.getElementById('total-label'));
+                    document.getElementById('output').innerHTML = "One serving has " + String(val) + "g of net carbs!";
+                    document.getElementById("display").style="margin-top: 75px";
+                } else if (val < 0) {
+                    input1.setCustomValidity(" ")
+                    document.getElementById('total-label').innerHTML = "Total Carbs Per Serving (in grams)<br>*Total carbs must be greater than or equal to the fiber and alcohol values.*"
+                    document.getElementById('output').innerHTML = "&nbsp;";
+                    document.getElementById("display").style="margin-top: 43px";
+                } else if (val == 0 && input1.value == 0) {
+                    clear(input1, document.getElementById('total-label'));
+                    document.getElementById('output').innerHTML = "&nbsp;";
+                    document.getElementById("display").style="margin-top: 75px";
+                }
             }
-        </script>
-    </div>
+
+        }
+    </script>
 
     <br>
     
